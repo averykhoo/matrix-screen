@@ -1,1 +1,0 @@
-pip install curses-2.2-cp27-none-win_amd64.whl

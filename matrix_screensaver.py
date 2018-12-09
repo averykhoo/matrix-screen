@@ -31,9 +31,9 @@ class MatrixDisplay(object):
     def __init__(self):
         self.screen = curses.initscr()
         self.lines = []
-        self.workers = [MatrixWorker(worker_id, self.DIRECTION) for worker_id in xrange(self.WORKERS)]
+        self.workers = [MatrixWorker(worker_id, self.DIRECTION) for worker_id in range(self.WORKERS)]
         self.refresh_interval = 1.0 / self.FPS_MAX
-        temp = (random.randint(self.MIN_CHAR_PER_SECOND, self.MAX_CHAR_PER_SECOND) for _ in xrange(self.WORKERS))
+        temp = (random.randint(self.MIN_CHAR_PER_SECOND, self.MAX_CHAR_PER_SECOND) for _ in range(self.WORKERS))
         self.worker_intervals = [1.0 / chars_per_second for chars_per_second in temp]
 
         # bookkeeping
@@ -100,7 +100,7 @@ class MatrixDisplay(object):
             self.next_refresh += self.refresh_interval
             self.refresh()
 
-        for worker_id in xrange(self.WORKERS):
+        for worker_id in range(self.WORKERS):
             if time.time() > self.next_worker_wake_time[worker_id]:
                 self.next_worker_wake_time[worker_id] += self.worker_intervals[worker_id]
                 self.workers[worker_id].step(self)
@@ -201,6 +201,8 @@ if __name__ == '__main__':
 
     for path, dir_list, file_list in os.walk(RESOURCE_DIR):
         for text_file in file_list:
-            screen.add_file(os.path.join(path, text_file))
+            if '.' in text_file and text_file.rsplit('.', 1)[-1] in ['py', 'txt', 'cmd', 'md']:
+                print(text_file)
+                screen.add_file(os.path.join(path, text_file))
 
     screen.run()
