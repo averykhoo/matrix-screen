@@ -2,27 +2,15 @@ import curses
 import os
 import random
 import time
-import sys
 
 RESOURCE_DIR = '.'
-
-"""
-INSTRUCTIONS FOR USE:
-0) curses needed
-     builtin if not windows
-     for windows:
-         http://www.lfd.uci.edu/~gohlke/pythonlibs/#curses
-1) input text will be sourced from the resource directory
-     which must not be empty
-     and is the containing folder by default
-2) hit keyboard to exit
-"""
+RESOURCE_TYPES = ['py', 'txt', 'cmd', 'md', 'sh', 'gitignore']
 
 
 class MatrixDisplay(object):
     FPS_MAX = 60
     WORKERS = 45  # number of concurrent strings
-    DIRECTION = (0,1)#(1, 0)  # each next character takes a step of size (x, y)
+    DIRECTION = (0, 1)  # (1, 0)  # each next character takes a step of size (x, y)
     MIN_CHAR_PER_SECOND = 40
     MAX_CHAR_PER_SECOND = 50
     MAX_LEN = 30
@@ -53,12 +41,12 @@ class MatrixDisplay(object):
         curses.start_color()  # allow color use
 
         # define colors
-        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_CYAN)
-        curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
-        curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_BLACK)
-        self.init_color = curses.color_pair(1)  # first appears
-        self.norm_color = curses.color_pair(2)  # mid-string
-        self.poof_color = curses.color_pair(3)  # just before deletion
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_CYAN)  # first appears
+        self.init_color = curses.color_pair(1)
+        curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)  # mid-string
+        self.norm_color = curses.color_pair(2)
+        curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_BLACK)  # just before deletion
+        self.poof_color = curses.color_pair(3)
 
     def add_file(self, filename):
         if filename:
@@ -201,7 +189,7 @@ if __name__ == '__main__':
 
     for path, dir_list, file_list in os.walk(RESOURCE_DIR):
         for text_file in file_list:
-            if '.' in text_file and text_file.rsplit('.', 1)[-1] in ['py', 'txt', 'cmd', 'md']:
+            if '.' in text_file and text_file.rsplit('.', 1)[-1].lower() in RESOURCE_TYPES:
                 print(text_file)
                 screen.add_file(os.path.join(path, text_file))
 
